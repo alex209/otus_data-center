@@ -504,28 +504,62 @@ router ospfv3
 
 #### Маршруты IPv4 L01
 
-!["ПМаршруты IPv4 L01"](./img/L01_routing.png)
+!["Маршруты IPv4 L01"](./img/L01_routing.png)
 
 #### Маршруты IPv6 L01
 
-!["ПМаршруты IPv6 L01"](./img/L01_routing_ipv6.png)
+!["Маршруты IPv6 L01"](./img/L01_routing_ipv6.png)
 
 ---
 
 #### Маршруты IPv4 L02
 
-!["ПМаршруты IPv4 L02"](./img/L02_routing.png)
+!["Маршруты IPv4 L02"](./img/L02_routing.png)
 
 #### Маршруты IPv6 L02
 
-!["ПМаршруты IPv6 L02"](./img/L02_routing_ipv6.png)
+!["Маршруты IPv6 L02"](./img/L02_routing_ipv6.png)
 
 ---
 
 #### Маршруты IPv4 L03
 
-!["ПМаршруты IPv4 L03"](./img/L03_routing.png)
+!["Маршруты IPv4 L03"](./img/L03_routing.png)
 
 #### Маршруты IPv6 L03
 
-!["ПМаршруты IPv6 L03"](./img/L03_routing_ipv6.png)
+!["Маршруты IPv6 L03"](./img/L03_routing_ipv6.png)
+
+---
+
+#### Маршруты IPv4 L04
+
+!["Маршруты IPv4 L04"](./img/L04_routing.png)
+
+#### Маршруты IPv6 L04
+
+!["Маршруты IPv6 L04"](./img/L04_routing_ipv6.png)
+
+---
+
+#### Маршруты IPv4 L04
+
+!["Маршруты IPv4 L04"](./img/L04_routing.png)
+
+#### Маршруты IPv6 L04
+
+!["Маршруты IPv6 L04"](./img/L04_routing_ipv6.png)
+
+---
+
+#### BFD‑соседство S01
+
+!["BFD‑соседство S01"](./img/S01_bfd.png)
+
+#### BFD‑соседство S02
+
+!["BFD‑соседство S02"](./img/S02_bfd.png)
+
+---
+
+### [Файлы конфигураций устройств](./conf/)
