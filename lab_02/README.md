@@ -489,3 +489,43 @@ router ospfv3
 </details>
 
 ### Проверка работоспособности
+
+---
+
+#### Пинги IPv4 от клиента Linux_1
+
+!["Пинги от Linux_1"](./img/L01_ping.png)
+
+#### Пинги IPv6 от клиента Linux_1
+
+!["Пинги от Linux_1"](./img/L01_ping_ipv6.png)
+
+---
+
+#### Маршруты IPv4 L01
+
+!["ПМаршруты IPv4 L01"](./img/L01_routing.png)
+
+#### Маршруты IPv6 L01
+
+!["ПМаршруты IPv6 L01"](./img/L01_routing_ipv6.png)
+
+---
+
+#### Маршруты IPv4 L02
+
+!["ПМаршруты IPv4 L02"](./img/L02_routing.png)
+
+#### Маршруты IPv6 L02
+
+!["ПМаршруты IPv6 L02"](./img/L02_routing_ipv6.png)
+
+---
+
+#### Маршруты IPv4 L03
+
+!["ПМаршруты IPv4 L03"](./img/L03_routing.png)
+
+#### Маршруты IPv6 L03
+
+!["ПМаршруты IPv6 L03"](./img/L03_routing_ipv6.png)
