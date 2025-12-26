@@ -134,6 +134,8 @@
 
 ### Настройка ISIS на Spine
 
+> Примечание: Аутентификация в процессе ISIS защищает LSP, CSNP и PSNP сообщения а аутентификация на интерфейсах защищает HELLO сообщения. Для обеспечения максимальной совместимости Arista рекомендует использовать один и тот же ключ как в режиме интерфейса, так и в режиме router isis.
+
 <details>
 
 <summary>S01</summary>
@@ -532,3 +534,93 @@ router isis POD1
 ```
 
 </details>
+
+### Проверка работоспособности
+
+---
+
+#### Пинги IPv4 от клиента Linux_1 к другим клиентам
+
+!["Пинги от Linux_1"](./img/Linux_1_ping.png)
+
+#### Пинги IPv6 от клиента Linux_1
+
+!["Пинги от Linux_1"](./img/Linux_1_ping_ipv6.png)
+
+---
+
+#### Маршруты IPv4 на L01
+
+!["Маршруты IPv4 L01"](./img/L01_routing.png)
+
+#### Маршруты IPv6 на L01
+
+!["Маршруты IPv6 L01"](./img/L01_routing_ipv6.png)
+
+---
+
+#### Маршруты IPv4 на L02
+
+!["Маршруты IPv4 L02"](./img/L02_routing.png)
+
+#### Маршруты IPv6 на L02
+
+!["Маршруты IPv6 L02"](./img/L02_routing_ipv6.png)
+
+---
+
+#### Маршруты IPv4 на L03
+
+!["Маршруты IPv4 L03"](./img/L03_routing.png)
+
+#### Маршруты IPv6 на L03
+
+!["Маршруты IPv6 L03"](./img/L03_routing_ipv6.png)
+
+---
+
+#### Маршруты IPv4 на L04
+
+!["Маршруты IPv4 L04"](./img/L04_routing.png)
+
+#### Маршруты IPv6 на L04
+
+!["Маршруты IPv6 L04"](./img/L04_routing_ipv6.png)
+
+---
+
+#### ISIS соседство S01
+
+!["ISIS соседство S01"](./img/S01_neighbor.png)
+
+#### ISIS соседство S02
+
+!["ISIS соседство S02"](./img/S02_neighbor.png)
+
+---
+
+#### BFD‑соседство S01
+
+!["BFD‑соседство S01"](./img/S01_bfd.png)
+
+#### BFD‑соседство S02
+
+!["BFD‑соседство S02"](./img/S02_bfd.png)
+
+---
+
+### HELLO пакет
+
+!["Hello"](./img/L01_hello.png)
+
+### LSP (Link-state Packet) - пакет состояния канала (аналог LSA в OSPF)
+
+!["LSP (Link-state Packet) "](./img/L01_LSP.png)
+
+### CSNP (Complete Sequence Number PDU) - список всех состояний каналов (LSP) в базе данных состояний маршрутизатора
+
+!["CSNP (Complete Sequence Number PDU)"](./img/L01_CSNP.png)
+
+---
+
+### [Файлы конфигураций устройств](./conf/)
