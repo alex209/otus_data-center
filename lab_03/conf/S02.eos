@@ -1,0 +1,106 @@
+! device: S02 (vEOS-lab, EOS-4.32.4M)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname S02
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+interface Ethernet1
+   description to_L01
+   no switchport
+   ip address 10.1.2.0/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:1::/127
+   isis enable POD1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 7S1kwmc2GMTsI2hzNZxR9w==
+!
+interface Ethernet2
+   description to_L02
+   no switchport
+   ip address 10.1.2.2/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:2::/127
+   isis enable POD1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 7S1kwmc2GMTsI2hzNZxR9w==
+!
+interface Ethernet3
+   description to_L03
+   no switchport
+   ip address 10.1.2.4/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:3::/127
+   isis enable POD1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 7S1kwmc2GMTsI2hzNZxR9w==
+!
+interface Ethernet4
+   description to_L04
+   no switchport
+   ip address 10.1.2.6/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:4::/127
+   isis enable POD1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 7S1kwmc2GMTsI2hzNZxR9w==
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 192.168.1.2/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:1:2::/128
+   isis enable POD1
+   isis passive
+!
+interface Management1
+!
+ip routing
+!
+ipv6 unicast-routing
+!
+router isis POD1
+   net 49.0001.0001.0001.0002.00
+   is-hostname S02
+   is-type level-1
+   authentication mode md5
+   authentication key 7 7S1kwmc2GMTsI2hzNZxR9w==
+   !
+   address-family ipv4 unicast
+      bfd all-interfaces
+   !
+   address-family ipv6 unicast
+      bfd all-interfaces
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end
