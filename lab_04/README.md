@@ -791,6 +791,9 @@ router bgp 65500
 
 ### Настройка eBGP на Leaf
 
+Номер AS назначаем по схеме `6500x`
+ -  где `x` - порядковый номер Leaf
+
 <details>
 
 <summary>L01</summary>
@@ -862,6 +865,77 @@ router bgp 65001
  
 ---
 
+<details>
+
+<summary>L02</summary>
+
+```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.3/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:2::1/127
+!
+interface Ethernet2
+   description to_L02
+   no switchport
+   ip address 10.1.2.3/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:2::1/127
+!
+interface Ethernet8
+   description to_Linux2
+   no switchport
+   ip address 172.16.2.1/24
+   ipv6 enable
+   ipv6 address fd:1:2::1/64
+!
+interface Loopback0
+   ip address 192.168.0.2/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:2::/128
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE permit 20
+   match interface Ethernet8
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+router bgp 65002
+   router-id 192.168.0.2
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.2 peer group pg_SPINE
+   neighbor 10.1.2.2 peer group pg_SPINE
+   neighbor fdff:1:1:1:2:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:2:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+
+
+```
+
+</details>
 
 
 ---
