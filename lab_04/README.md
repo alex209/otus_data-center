@@ -556,10 +556,78 @@ router bgp 65500
 
 </details>
 
+## Проверка работоспособности iBGP 
+
+<details>
+
+<summary>Пинги от Linux_1 к другим клиентам</summary>
+
+!["Пинги от Linux_1"](./img/ibgp/Linux_1_ping.png)
 
 </details>
 
 ---
+
+<details>
+
+<summary>BGP соседство</summary>
+
+S01
+
+!["S01 BGP соседство"](./img/ibgp/S01_iBGP_summary.png)
+
+S02
+
+!["S02 BGP соседство"](./img/ibgp/S02_iBGP_summary.png)
+
+</details>
+
+---
+
+<details>
+
+<summary>BGP таблица</summary>
+
+L01
+
+!["L01 BGP"](./img/ibgp/L01_iBGP.png)
+
+L02
+
+!["L02 BGP"](./img/ibgp/L02_iBGP.png)
+
+L03
+
+!["L03 BGP"](./img/ibgp/L03_iBGP.png)
+
+L4
+
+!["L04 BGP"](./img/ibgp/L04_iBGP.png)
+
+</details>
+
+---
+
+<details>
+
+<summary>BFD сосодство</summary>
+
+S01
+
+!["S01 BFD"](./img/ibgp/S01_bfd.png)
+
+S02
+
+!["S02 BFD"](./img/ibgp/S02_bfd.png)
+
+</details>
+
+---
+
+
+
+</details>
+
 
 <details>
 
