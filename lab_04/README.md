@@ -633,9 +633,230 @@ S02
 
 <summary><h2>Настройка eBGP для Underlay сети</h2></summary>
 
+### Настройка eBGP на Spine
 
+Для всех Spine назначаем номер AS 65500
+
+<details>
+
+<summary>S01</summary>
+
+```
+!
+interface Ethernet1
+   description to_L01
+   no switchport
+   ip address 10.1.1.0/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:1::/127
+!
+interface Ethernet2
+   description to_L02
+   no switchport
+   ip address 10.1.1.2/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:2::/127
+!
+interface Ethernet3
+   description to_L03
+   no switchport
+   ip address 10.1.1.4/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:3::/127
+!
+interface Ethernet4
+   description to_L04
+   no switchport
+   ip address 10.1.1.6/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:4::/127
+!
+interface Loopback0
+   ip address 192.168.1.1/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:1:1::/128
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+peer-filter pf_LEAF
+   10 match as-range 65001-65010 result accept
+!
+router bgp 65500
+   router-id 192.168.1.1
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   bgp listen range 10.1.0.0/16 peer-group pg_LEAF peer-filter pf_LEAF
+   bgp listen range fdff:1:1::/48 peer-group pg_LEAF_IPv6 peer-filter pf_LEAF
+   neighbor pg_LEAF peer group
+   neighbor pg_LEAF bfd
+   neighbor pg_LEAF bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LEAF_IPv6 peer group
+   neighbor pg_LEAF_IPv6 bfd
+   neighbor pg_LEAF_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   address-family ipv4
+      neighbor pg_LEAF activate
+   !
+   address-family ipv6
+      neighbor pg_LEAF_IPv6 activate
+!
+
+```
 
 </details>
 
+<details>
+
+<summary>S01</summary>
+
+```
+!
+interface Ethernet1
+   description to_L01
+   no switchport
+   ip address 10.1.2.0/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:1::/127
+!
+interface Ethernet2
+   description to_L02
+   no switchport
+   ip address 10.1.2.2/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:2::/127
+!
+interface Ethernet3
+   description to_L03
+   no switchport
+   ip address 10.1.2.4/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:3::/127
+!
+interface Ethernet4
+   description to_L04
+   no switchport
+   ip address 10.1.2.6/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:4::/127
+!
+interface Loopback0
+   ip address 192.168.1.2/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:1:2::/128
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+peer-filter pf_LEAF
+   10 match as-range 65001-65010 result accept
+!
+router bgp 65500
+   router-id 192.168.1.2
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   bgp listen range 10.1.0.0/16 peer-group pg_LEAF peer-filter pf_LEAF
+   bgp listen range fdff:1:1::/48 peer-group pg_LEAF_IPv6 peer-filter pf_LEAF
+   neighbor pg_LEAF peer group
+   neighbor pg_LEAF bfd
+   neighbor pg_LEAF bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LEAF_IPv6 peer group
+   neighbor pg_LEAF_IPv6 bfd
+   neighbor pg_LEAF_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   address-family ipv4
+      neighbor pg_LEAF activate
+   !
+   address-family ipv6
+      neighbor pg_LEAF_IPv6 activate
+!
+
+```
+
+</details>
 ---
+
+### Настройка eBGP на Leaf
+
+<details>
+
+<summary>L01</summary>
+
+```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.1/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:1::1/127
+!
+interface Ethernet2
+   description to_S02
+   no switchport
+   ip address 10.1.2.1/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:1::1/127
+!
+interface Ethernet8
+   no switchport
+   ip address 172.16.1.1/24
+   ipv6 enable
+   ipv6 address fd:1:1::1/64
+!
+interface Loopback0
+   ip address 192.168.0.1/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:1::/128
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE permit 20
+   match interface Ethernet8
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+router bgp 65001
+   router-id 192.168.0.1
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.0 peer group pg_SPINE
+   neighbor 10.1.2.0 peer group pg_SPINE
+   neighbor fdff:1:1:1:1:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:1:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+!
+```
+</details>
+
+
+
+---
+</details>
 
