@@ -637,6 +637,8 @@ S02
 
 Для всех Spine назначаем номер AS 65500
 
+---
+
 <details>
 
 <summary>S01</summary>
@@ -710,6 +712,8 @@ router bgp 65500
 
 </details>
 
+---
+
 <details>
 
 <summary>S01</summary>
@@ -782,6 +786,7 @@ router bgp 65500
 ```
 
 </details>
+
 ---
 
 ### Настройка eBGP на Leaf
@@ -854,6 +859,8 @@ router bgp 65001
 !
 ```
 </details>
+ 
+---
 
 
 
