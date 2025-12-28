@@ -75,25 +75,25 @@ router bgp 65500
    router-id 192.168.1.1
    no bgp default ipv4-unicast
    timers bgp 3 9
-   bgp listen range 10.1.0.0/16 peer-group pg_LIAF remote-as 65500
-   bgp listen range fdff:1:1::/48 peer-group pg_LIAF_IPv6 remote-as 65500
-   neighbor pg_LIAF peer group
-   neighbor pg_LIAF next-hop-self
-   neighbor pg_LIAF bfd
-   neighbor pg_LIAF bfd interval 100 min-rx 100 multiplier 3
-   neighbor pg_LIAF route-reflector-client
-   neighbor pg_LIAF_IPv6 peer group
-   neighbor pg_LIAF_IPv6 next-hop-self
-   neighbor pg_LIAF_IPv6 bfd
-   neighbor pg_LIAF_IPv6 bfd interval 100 min-rx 100 multiplier 3
-   neighbor pg_LIAF_IPv6 route-reflector-client
+   bgp listen range 10.1.0.0/16 peer-group pg_LEAF remote-as 65500
+   bgp listen range fdff:1:1::/48 peer-group pg_LEAF_IPv6 remote-as 65500
+   neighbor pg_LEAF peer group
+   neighbor pg_LEAF next-hop-self
+   neighbor pg_LEAF bfd
+   neighbor pg_LEAF bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LEAF route-reflector-client
+   neighbor pg_LEAF_IPv6 peer group
+   neighbor pg_LEAF_IPv6 next-hop-self
+   neighbor pg_LEAF_IPv6 bfd
+   neighbor pg_LEAF_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LEAF_IPv6 route-reflector-client
    redistribute connected route-map rm_REDISRTIBUTE
    !
    address-family ipv4
-      neighbor pg_LIAF activate
+      neighbor pg_LEAF activate
    !
    address-family ipv6
-      neighbor pg_LIAF_IPv6 activate
+      neighbor pg_LEAF_IPv6 activate
 !
 router multicast
    ipv4
