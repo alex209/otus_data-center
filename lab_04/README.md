@@ -268,6 +268,9 @@ router bgp 65500
 </details>
 
 ---
+
+### Настройка iBGP на Leaf
+
 <details>
 
 <summary>L01</summary>
