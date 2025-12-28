@@ -102,9 +102,467 @@
 
 | Device  | Interface | IP Address      | Gateway      | IPv6 Address   | IPv6 Gateway |
 | ------- | --------- | --------------- | ------------ | -------------- | ------------ |
-| Linux_1 | e0        | `172.16.1.2/24` | `172.16.1.1` | `fd:1:1::2/64` | `fd:1:1::1`  |
-| Linux_2 | e0        | `172.16.2.2/24` | `172.16.2.1` | `fd:1:2::2/64` | `fd:1:2::1`  |
-| Linux_3 | e0        | `172.16.3.2/24` | `172.16.3.1` | `fd:1:3::2/64` | `fd:1:3::1`  |
-| Linux_4 | e0        | `172.16.4.2/24` | `172.16.4.1` | `fd:1:4::2/64` | `fd:1:4::1`  |
+| Linux_1 | eth0      | `172.16.1.2/24` | `172.16.1.1` | `fd:1:1::2/64` | `fd:1:1::1`  |
+| Linux_2 | eth0      | `172.16.2.2/24` | `172.16.2.1` | `fd:1:2::2/64` | `fd:1:2::1`  |
+| Linux_3 | eth0      | `172.16.3.2/24` | `172.16.3.1` | `fd:1:3::2/64` | `fd:1:3::1`  |
+| Linux_4 | eth0      | `172.16.4.2/24` | `172.16.4.1` | `fd:1:4::2/64` | `fd:1:4::1`  |
 
 ---
+
+<details>
+
+<summary><h2>Настройка iBGP для Underlay сети</h2></summary>
+
+### Настройка iBGP на Spine
+
+<details>
+
+<summary>S01</summary>
+
+
+```
+!
+interface Ethernet1
+   description to_L01
+   no switchport
+   ip address 10.1.1.0/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:1::/127
+!
+interface Ethernet2
+   description to_L02
+   no switchport
+   ip address 10.1.1.2/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:2::/127
+!
+interface Ethernet3
+   description to_L03
+   no switchport
+   ip address 10.1.1.4/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:3::/127
+!
+interface Ethernet4
+   description to_L04
+   no switchport
+   ip address 10.1.1.6/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:4::/127
+!
+!
+interface Loopback0
+   ip address 192.168.1.1/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:1:1::/128
+!   
+route-map rm_REDISRTIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISRTIBUTE deny 50
+!
+router bgp 65500
+   router-id 192.168.1.1
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   bgp listen range 10.1.0.0/16 peer-group pg_LIAF remote-as 65500
+   bgp listen range fdff:1:1::/48 peer-group pg_LIAF_IPv6 remote-as 65500
+   neighbor pg_LIAF peer group
+   neighbor pg_LIAF next-hop-self
+   neighbor pg_LIAF bfd
+   neighbor pg_LIAF bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LIAF route-reflector-client
+   neighbor pg_LIAF_IPv6 peer group
+   neighbor pg_LIAF_IPv6 next-hop-self
+   neighbor pg_LIAF_IPv6 bfd
+   neighbor pg_LIAF_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LIAF_IPv6 route-reflector-client
+   redistribute connected route-map rm_REDISRTIBUTE
+   !
+   address-family ipv4
+      neighbor pg_LIAF activate
+   !
+   address-family ipv6
+      neighbor pg_LIAF_IPv6 activate
+!
+```
+</details>
+
+---
+
+<details>
+
+<summary>S02</summary>
+
+```
+!
+interface Ethernet1
+   description to_L01
+   no switchport
+   ip address 10.1.2.0/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:1::/127
+!
+interface Ethernet2
+   description to_L02
+   no switchport
+   ip address 10.1.2.2/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:2::/127
+!
+interface Ethernet3
+   description to_L03
+   no switchport
+   ip address 10.1.2.4/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:3::/127
+!
+interface Ethernet4
+   description to_L04
+   no switchport
+   ip address 10.1.2.6/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:4::/127
+!
+interface Loopback0
+   ip address 192.168.1.2/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:1:2::/128
+!
+route-map rm_REDISRTIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISRTIBUTE deny 50
+!
+router bgp 65500
+   router-id 192.168.1.2
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   bgp listen range 10.1.0.0/16 peer-group pg_LIAF remote-as 65500
+   bgp listen range fdff:1:1::/48 peer-group pg_LIAF_IPv6 remote-as 65500
+   neighbor pg_LIAF peer group
+   neighbor pg_LIAF next-hop-self
+   neighbor pg_LIAF bfd
+   neighbor pg_LIAF bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LIAF route-reflector-client
+   neighbor pg_LIAF_IPv6 peer group
+   neighbor pg_LIAF_IPv6 next-hop-self
+   neighbor pg_LIAF_IPv6 bfd
+   neighbor pg_LIAF_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LIAF_IPv6 route-reflector-client
+   redistribute connected route-map rm_REDISRTIBUTE
+   !
+   address-family ipv4
+      neighbor pg_LIAF activate
+   !
+   address-family ipv6
+      neighbor pg_LIAF_IPv6 activate
+!
+
+```
+
+</details>
+
+---
+<details>
+
+<summary>L01</summary>
+
+```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.1/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:1::1/127
+!
+interface Ethernet2
+   description to_S02
+   no switchport
+   ip address 10.1.2.1/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:1::1/127
+!
+interface Ethernet8
+   no switchport
+   ip address 172.16.1.1/24
+   ipv6 enable
+   ipv6 address fd:1:1::1/64
+!
+interface Loopback0
+   ip address 192.168.0.1/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:1::/128
+!
+route-map rm_REDISRTIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISRTIBUTE permit 20
+   match interface Ethernet8
+   set origin igp
+!
+route-map rm_REDISRTIBUTE deny 50
+!
+router bgp 65500
+   router-id 192.168.0.1
+   no bgp default ipv4-unicast
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.0 peer group pg_SPINE
+   neighbor 10.1.2.0 peer group pg_SPINE
+   neighbor fdff:1:1:1:1:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:1:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISRTIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+!
+
+```
+
+</details>
+
+---
+<details>
+
+<summary>L02</summary>
+
+```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.3/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:2::1/127
+!
+interface Ethernet2
+   description to_L02
+   no switchport
+   ip address 10.1.2.3/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:2::1/127
+!
+interface Ethernet8
+   description to_Linux2
+   no switchport
+   ip address 172.16.2.1/24
+   ipv6 enable
+   ipv6 address fd:1:2::1/64
+!
+interface Loopback0
+   ip address 192.168.0.2/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:2::/128
+!
+route-map rm_REDISRTIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISRTIBUTE permit 20
+   match interface Ethernet8
+   set origin igp
+!
+route-map rm_REDISRTIBUTE deny 50
+!
+router bgp 65500
+   router-id 192.168.0.2
+   no bgp default ipv4-unicast
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.2 peer group pg_SPINE
+   neighbor 10.1.2.2 peer group pg_SPINE
+   neighbor fdff:1:1:1:2:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:2:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISRTIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+!
+
+```
+
+</details>
+
+---
+<details>
+
+<summary>L03</summary>
+
+```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.5/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:3::1/127
+!
+interface Ethernet2
+   description to_S02
+   no switchport
+   ip address 10.1.2.5/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:3::1/127
+!
+interface Ethernet8
+   description to_Linux_3
+   no switchport
+   ip address 172.16.3.1/24
+   ipv6 enable
+   ipv6 address fd:1:3::1/64
+!
+interface Loopback0
+   ip address 192.168.0.3/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:3::/128
+!
+route-map rm_REDISRTIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISRTIBUTE permit 20
+   match interface Ethernet8
+   set origin igp
+!
+route-map rm_REDISRTIBUTE deny 50
+!
+router bgp 65500
+   router-id 192.168.0.3
+   no bgp default ipv4-unicast
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.4 peer group pg_SPINE
+   neighbor 10.1.2.4 peer group pg_SPINE
+   neighbor fdff:1:1:1:3:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:3:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISRTIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+!
+
+```
+
+</details>
+
+---
+<details>
+
+<summary>L04</summary>
+
+```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.7/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:4::1/127
+!
+interface Ethernet2
+   description to_S02
+   no switchport
+   ip address 10.1.2.7/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:4::1/127
+!
+interface Ethernet8
+   description to_Linux_4
+   no switchport
+   ip address 172.16.4.1/24
+   ipv6 enable
+   ipv6 address fd:1:4::1/64
+!
+interface Loopback0
+   ip address 192.168.0.4/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:4::/128
+!
+route-map rm_REDISRTIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISRTIBUTE permit 20
+   match interface Ethernet8
+   set origin igp
+!
+route-map rm_REDISRTIBUTE deny 50
+!
+router bgp 65500
+   router-id 192.168.0.4
+   no bgp default ipv4-unicast
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.6 peer group pg_SPINE
+   neighbor 10.1.2.6 peer group pg_SPINE
+   neighbor fdff:1:1:1:4:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:4:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISRTIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+!
+```
+
+</details>
+
+
+</details>
+
+---
+
+<details>
+
+<summary><h2>Настройка eBGP для Underlay сети</h2></summary>
+
+
+
+</details>
+
+---
+
