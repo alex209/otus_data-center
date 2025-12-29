@@ -1129,4 +1129,20 @@ L4
 
 ---
 
+<details>
+
+<summary>BFD сосодство</summary>
+
+S01
+
+!["S01 BFD"](./img/ebgp/S01_bfd.png)
+
+S02
+
+!["S02 BFD"](./img/ebgp/S02_bfd.png)
+
+</details>
+
+---
+
 </details>
