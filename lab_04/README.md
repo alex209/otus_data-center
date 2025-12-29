@@ -121,7 +121,6 @@
 
 <summary>S01</summary>
 
-
 ```
 !
 interface Ethernet1
@@ -157,7 +156,7 @@ interface Loopback0
    ip address 192.168.1.1/32
    ipv6 enable
    ipv6 address fdfd:1:1:1:1::/128
-!   
+!
 route-map rm_REDISRTIBUTE permit 10
    match interface Loopback0
    set origin igp
@@ -189,6 +188,7 @@ router bgp 65500
       neighbor pg_LEAF_IPv6 activate
 !
 ```
+
 </details>
 
 ---
@@ -342,6 +342,7 @@ router bgp 65500
 </details>
 
 ---
+
 <details>
 
 <summary>L02</summary>
@@ -414,6 +415,7 @@ router bgp 65500
 </details>
 
 ---
+
 <details>
 
 <summary>L03</summary>
@@ -486,6 +488,7 @@ router bgp 65500
 </details>
 
 ---
+
 <details>
 
 <summary>L04</summary>
@@ -556,7 +559,7 @@ router bgp 65500
 
 </details>
 
-## Проверка работоспособности iBGP 
+## Проверка работоспособности iBGP
 
 <details>
 
@@ -624,10 +627,7 @@ S02
 
 ---
 
-
-
 </details>
-
 
 <details>
 
@@ -792,7 +792,8 @@ router bgp 65500
 ### Настройка eBGP на Leaf
 
 Номер AS назначаем по схеме `6500x`
- -  где `x` - порядковый номер Leaf
+
+- где `x` - порядковый номер Leaf
 
 <details>
 
@@ -861,6 +862,7 @@ router bgp 65001
       neighbor pg_SPINE_IPv6 activate
 !
 ```
+
 </details>
  
 ---
@@ -943,12 +945,188 @@ router bgp 65002
 <summary>L03</summary>
 
 ```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.5/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:3::1/127
+!
+interface Ethernet2
+   description to_S02
+   no switchport
+   ip address 10.1.2.5/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:3::1/127
+!
+interface Ethernet8
+   description to_Linux_3
+   no switchport
+   ip address 172.16.3.1/24
+   ipv6 enable
+   ipv6 address fd:1:3::1/64
+!
+interface Loopback0
+   ip address 192.168.0.3/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:3::/128
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE permit 20
+   match interface Ethernet8
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+router bgp 65003
+   router-id 192.168.0.3
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.4 peer group pg_SPINE
+   neighbor 10.1.2.4 peer group pg_SPINE
+   neighbor fdff:1:1:1:3:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:3:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+!
 
 ```
 
 </details>
 
-
 ---
+
+<details>
+
+<summary>L04</summary>
+
+```
+!
+interface Ethernet1
+   description to_S01
+   no switchport
+   ip address 10.1.1.7/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:4::1/127
+!
+interface Ethernet2
+   description to_S02
+   no switchport
+   ip address 10.1.2.7/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:4::1/127
+!
+interface Ethernet8
+   description to_Linux_4
+   no switchport
+   ip address 172.16.4.1/24
+   ipv6 enable
+   ipv6 address fd:1:4::1/64
+!
+interface Loopback0
+   ip address 192.168.0.4/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:4::/128
+!
+!
+router bgp 65004
+   router-id 192.168.0.4
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   maximum-paths 2 ecmp 2
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.6 peer group pg_SPINE
+   neighbor 10.1.2.6 peer group pg_SPINE
+   neighbor fdff:1:1:1:4:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:4:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+!
+
+```
+
 </details>
 
+## Проверка работоспособности eBGP
+
+<details>
+
+<summary>Пинги от Linux_1 к другим клиентам</summary>
+
+!["Пинги от Linux_1"](./img/ebgp/Linux_1_ping.png)
+
+</details>
+
+---
+
+<details>
+
+<summary>BGP соседство</summary>
+
+S01
+
+!["S01 BGP соседство"](./img/ebgp/S01_eBGP_summary.png)
+
+S02
+
+!["S02 BGP соседство"](./img/ebgp/S02_eBGP_summary.png)
+
+</details>
+
+---
+
+<details>
+
+<summary>BGP таблица</summary>
+
+L01
+
+!["L01 BGP"](./img/ebgp/L01_eBGP.png)
+
+L02
+
+!["L02 BGP"](./img/ebgp/L02_eBGP.png)
+
+L03
+
+!["L03 BGP"](./img/ebgp/L03_eBGP.png)
+
+L4
+
+!["L04 BGP"](./img/ebgp/L04_eBGP.png)
+
+</details>
+
+---
+
+</details>
