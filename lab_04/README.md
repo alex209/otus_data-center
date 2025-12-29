@@ -932,6 +932,17 @@ router bgp 65002
    address-family ipv6
       neighbor pg_SPINE_IPv6 activate
 
+```
+
+</details>
+
+---
+
+<details>
+
+<summary>L03</summary>
+
+```
 
 ```
 
