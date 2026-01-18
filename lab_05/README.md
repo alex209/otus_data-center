@@ -388,7 +388,16 @@ router bgp 65500
 
 <details>
 
-<summary>Пинги от Linux_1 к другим клиентам</summary>
+<summary>Пинги во VLAN 100 от Linux_1 к другим клиентам</summary>
 
+!["Пинги от Linux_1"](./img/iBGP/ping_Linux_1.png)
+
+</details>
+
+<details>
+
+<summary>Пинги во VLAN 200 от Linux_5 к другим клиентам</summary>
+
+!["Пинги от Linux_5"](./img/iBGP/ping_Linux_5.png)
 
 </details>
