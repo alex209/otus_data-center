@@ -14,7 +14,7 @@
 
 ### Топология сети
 
-![Топология сети](img/lab_04.png)
+![Топология сети](img/lab_05.png)
 
 
 ### Схема адресов IPv4 & IPv6
@@ -157,6 +157,238 @@ router bgp 65500
 Полная конфигурация [Spine S02](./conf/iBGP/S02.eos)
 
 </details>
+
+
+### Настройка iBGP на Leaf
+
+<details>
+
+<summary>L01</summary>
+
+```
+!
+vlan 100
+   name Client_100
+!
+vlan 200
+   name Client_200
+!
+interface Ethernet7
+   description Client_200
+   switchport access vlan 200
+!
+interface Ethernet8
+   description Client_100
+   switchport access vlan 100
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+!
+router bgp 65500
+   router-id 192.168.0.1
+   no bgp default ipv4-unicast
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN remote-as 65500
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN description OVERLAY
+   neighbor pg_EVPN send-community extended
+   neighbor 192.168.1.1 peer group pg_EVPN
+   neighbor 192.168.1.2 peer group pg_EVPN
+   vlan 100
+      rd auto
+      route-target both 100:10100
+      redistribute learned
+   !
+   vlan 200
+      rd auto
+      route-target both 200:10200
+      redistribute learned
+   !
+   address-family evpn
+      neighbor pg_EVPN activate
+   !
+
+```
+Полная конфигурация [Leaf L01](./conf/iBGP/L01.eos)
+
+</details>
+
+<details>
+
+<summary>L02</summary>
+
+```
+!
+vlan 100
+   name Client_100
+!
+vlan 200
+   name Client_200
+!
+interface Ethernet7
+   description Client_200
+   switchport access vlan 200
+!
+interface Ethernet8
+   description Client_100
+   switchport access vlan 100
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+!
+router bgp 65500
+   router-id 192.168.0.2
+   no bgp default ipv4-unicast
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN remote-as 65500
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN description OVERLAY
+   neighbor pg_EVPN send-community extended
+   neighbor 192.168.1.1 peer group pg_EVPN
+   neighbor 192.168.1.2 peer group pg_EVPN
+   vlan 100
+      rd auto
+      route-target both 100:10100
+      redistribute learned
+   !
+   vlan 200
+      rd auto
+      route-target both 200:10200
+      redistribute learned
+   !
+   address-family evpn
+      neighbor pg_EVPN activate
+   !
+
+```
+Полная конфигурация [Leaf L02](./conf/iBGP/L02.eos)
+
+</details>
+
+<details>
+
+<summary>L03</summary>
+
+```
+!
+vlan 100
+   name Client_100
+!
+vlan 200
+   name Client_200
+!
+interface Ethernet7
+   description Client_200
+   switchport access vlan 200
+!
+interface Ethernet8
+   description Client_100
+   switchport access vlan 100
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+!
+router bgp 65500
+   router-id 192.168.0.3
+   no bgp default ipv4-unicast
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN remote-as 65500
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN description OVERLAY
+   neighbor pg_EVPN send-community extended
+   neighbor 192.168.1.1 peer group pg_EVPN
+   neighbor 192.168.1.2 peer group pg_EVPN
+   vlan 100
+      rd auto
+      route-target both 100:10100
+      redistribute learned
+   !
+   vlan 200
+      rd auto
+      route-target both 200:10200
+      redistribute learned
+   !
+   address-family evpn
+      neighbor pg_EVPN activate
+   !
+
+```
+Полная конфигурация [Leaf L03](./conf/iBGP/L03.eos)
+
+</details>
+
+<details>
+
+<summary>L04</summary>
+
+```
+!
+vlan 100
+   name Client_100
+!
+vlan 200
+   name Client_200
+!
+interface Ethernet7
+   description Client_200
+   switchport access vlan 200
+!
+interface Ethernet8
+   description Client_100
+   switchport access vlan 100
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+!
+router bgp 65500
+   router-id 192.168.0.4
+   no bgp default ipv4-unicast
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN remote-as 65500
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN description OVERLAY
+   neighbor pg_EVPN send-community extended
+   neighbor 192.168.1.1 peer group pg_EVPN
+   neighbor 192.168.1.2 peer group pg_EVPN
+   vlan 100
+      rd auto
+      route-target both 100:10100
+      redistribute learned
+   !
+   vlan 200
+      rd auto
+      route-target both 200:10200
+      redistribute learned
+   !
+   address-family evpn
+      neighbor pg_EVPN activate
+   !
+
+```
+Полная конфигурация [Leaf L04](./conf/iBGP/L04.eos)
+
+</details>
+
+
+</details>
+
+## Проверка работоспособности iBGP Overlay сети
+
+<details>
+
+<summary>Пинги от Linux_1 к другим клиентам</summary>
 
 
 </details>
