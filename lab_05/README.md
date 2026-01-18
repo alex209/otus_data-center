@@ -107,3 +107,17 @@
 | Linux_8 | eth0      | `200` | `172.16.200.18/24` | `fd:1:200::18/64` |
 
 
+<details>
+
+<summary><h2>Настройка iBGP для Overlay сети</h2></summary>
+
+### Настройка iBGP на Spine
+
+
+
+```
+
+
+```
+
+</details>
