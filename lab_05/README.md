@@ -113,11 +113,50 @@
 
 ### Настройка iBGP на Spine
 
+Настройка Underlay сети iBGP была произведена в [лаботаторной работе №4](../lab_04/README.md).
 
+Произведем донастройку IBGP 
+
+
+<details>
+
+<summary>S01</summary>
 
 ```
+router bgp 65500
+   router-id 192.168.1.1
+   no bgp default ipv4-unicast
+   bgp listen range 192.168.0.0/24 peer-group pg_EVPN remote-as 65500
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN route-reflector-client
+   neighbor pg_EVPN send-community extended
+   address-family evpn
+      neighbor pg_EVPN activate
+```
+Полная конфигурация [Spine S01](./conf/iBGP/S01.eos)
 
+</details>
+
+<details>
+
+<summary>S02</summary>
 
 ```
+router bgp 65500
+   router-id 192.168.1.2
+   no bgp default ipv4-unicast
+   bgp listen range 192.168.0.0/24 peer-group pg_EVPN remote-as 65500
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN route-reflector-client
+   neighbor pg_EVPN send-community extended
+   address-family evpn
+      neighbor pg_EVPN activate
+```
+Полная конфигурация [Spine S02](./conf/iBGP/S02.eos)
+
+</details>
+
 
 </details>
