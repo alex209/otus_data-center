@@ -109,7 +109,7 @@
 
 <details>
 
-<summary><h2>Настройка iBGP для Overlay сети</h2></summary>
+<summary><h2>Настройка iBGP для Overlay сети в Underlay сети iBGP</h2></summary>
 
 ### Настройка iBGP на Spine
 
