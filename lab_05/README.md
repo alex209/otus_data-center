@@ -1,6 +1,6 @@
 # Лабораторная №5
 
-## VxLAN. EVPN L2 
+## VxLAN. EVPN L2
 
 ### Цель задания
 
@@ -15,7 +15,6 @@
 ### Топология сети
 
 ![Топология сети](img/lab_05.png)
-
 
 ### Схема адресов IPv4 & IPv6
 
@@ -96,7 +95,7 @@
 #### Итоговая таблица адресов клиентов
 
 | Device  | Interface | VLAN  | IP Address         | IPv6 Address      |
-| ------- | --------- | ----  | ------------------ | ----------------- |
+| ------- | --------- | ----- | ------------------ | ----------------- |
 | Linux_1 | eth0      | `100` | `172.16.100.11/24` | `fd:1:100::11/64` |
 | Linux_2 | eth0      | `100` | `172.16.100.12/24` | `fd:1:100::12/64` |
 | Linux_3 | eth0      | `100` | `172.16.100.13/24` | `fd:1:100::13/64` |
@@ -106,7 +105,6 @@
 | Linux_7 | eth0      | `200` | `172.16.200.17/24` | `fd:1:200::17/64` |
 | Linux_8 | eth0      | `200` | `172.16.200.18/24` | `fd:1:200::18/64` |
 
-
 <details>
 
 <summary><h2>Настройка iBGP для Overlay сети в Underlay сети iBGP</h2></summary>
@@ -115,8 +113,7 @@
 
 Настройка Underlay сети iBGP была произведена в [лаботаторной работе №4](../lab_04/README.md).
 
-Произведем донастройку IBGP 
-
+Произведем донастройку IBGP
 
 <details>
 
@@ -134,6 +131,7 @@ router bgp 65500
    address-family evpn
       neighbor pg_EVPN activate
 ```
+
 Полная конфигурация [Spine S01](./conf/iBGP/S01.eos)
 
 </details>
@@ -154,10 +152,10 @@ router bgp 65500
    address-family evpn
       neighbor pg_EVPN activate
 ```
+
 Полная конфигурация [Spine S02](./conf/iBGP/S02.eos)
 
 </details>
-
 
 ### Настройка iBGP на Leaf
 
@@ -212,6 +210,7 @@ router bgp 65500
    !
 
 ```
+
 Полная конфигурация [Leaf L01](./conf/iBGP/L01.eos)
 
 </details>
@@ -267,6 +266,7 @@ router bgp 65500
    !
 
 ```
+
 Полная конфигурация [Leaf L02](./conf/iBGP/L02.eos)
 
 </details>
@@ -322,6 +322,7 @@ router bgp 65500
    !
 
 ```
+
 Полная конфигурация [Leaf L03](./conf/iBGP/L03.eos)
 
 </details>
@@ -377,10 +378,10 @@ router bgp 65500
    !
 
 ```
+
 Полная конфигурация [Leaf L04](./conf/iBGP/L04.eos)
 
 </details>
-
 
 </details>
 
@@ -399,5 +400,115 @@ router bgp 65500
 <summary>Пинги во VLAN 200 от Linux_5 к другим клиентам</summary>
 
 !["Пинги от Linux_5"](./img/iBGP/ping_Linux_5.png)
+
+</details>
+
+<details>
+
+<summary>Инкапсуляция ICMP в VxLAN</summary>
+
+!["Инкапсуляция VxLAN"](./img/iBGP/encapsulation.png)
+
+</details>
+
+### Просмотр BGP сессий
+
+<details>
+
+<summary>L01 BGP соседство</summary>
+
+!["L01 BGP соседство"](./img/iBGP/bgp_summ_L01.png)
+
+</details>
+
+<details>
+
+<summary>L02 BGP соседство</summary>
+
+!["L02 BGP соседство"](./img/iBGP/bgp_summ_L02.png)
+
+</details>
+
+<details>
+
+<summary>L03 BGP соседство</summary>
+
+!["L03 BGP соседство"](./img/iBGP/bgp_summ_L03.png)
+
+</details>
+
+<details>
+
+<summary>L04 BGP соседство</summary>
+
+!["L04 BGP соседство"](./img/iBGP/bgp_summ_L04.png)
+
+</details>
+
+### Маршруты мы получаем в AFI EVPN
+
+<details>
+
+<summary>L01 BGP evpn</summary>
+
+!["L01 BGP evpn"](./img/iBGP/bgp_evpn_L01.png)
+
+</details>
+
+<details>
+
+<summary>L02 BGP evpn</summary>
+
+!["L02 BGP evpn"](./img/iBGP/bgp_evpn_L02.png)
+
+</details>
+
+<details>
+
+<summary>L03 BGP evpn</summary>
+
+!["L03 BGP evpn"](./img/iBGP/bgp_evpn_L03.png)
+
+</details>
+
+<details>
+
+<summary>L04 BGP evpn</summary>
+
+!["L04 BGP evpn"](./img/iBGP/bgp_evpn_L04.png)
+
+</details>
+
+### Подробная информация о маршрутах type-2
+
+<details>
+
+<summary>L01 BGP evpn type-2</summary>
+
+!["L01 BGP evpn type-2"](./img/iBGP/bgp_evpn_mac_ip_L01.png)
+
+</details>
+
+<details>
+
+<summary>L02 BGP evpn type-2</summary>
+
+!["L02 BGP evpn type-2"](./img/iBGP/bgp_evpn_mac_ip_L02.png)
+
+</details>
+
+<details>
+
+<summary>L03 BGP evpn type-2</summary>
+
+!["L03 BGP evpn type-2"](./img/iBGP/bgp_evpn_mac_ip_L03.png)
+
+</details>
+
+<details>
+
+<summary>L04 BGP evpn type-2</summary>
+
+!["L04 BGP evpn type-2"](./img/iBGP/bgp_evpn_mac_ip_L04.png)
 
 </details>
