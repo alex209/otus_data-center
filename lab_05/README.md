@@ -512,3 +512,21 @@ router bgp 65500
 !["L04 BGP evpn type-2"](./img/iBGP/bgp_evpn_mac_ip_L04.png)
 
 </details>
+
+### Таблица MAC адресов
+
+<details>
+
+<summary>L01 mac addresses</summary>
+
+!["L01 mac addresses"](./img/iBGP/mac_addr_L01.png)
+
+</details>
+
+<details>
+
+<summary>L02 mac addresses</summary>
+
+!["L02 mac addresses"](./img/iBGP/mac_addr_L02.png)
+
+</details>
