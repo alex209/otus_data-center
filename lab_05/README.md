@@ -530,3 +530,21 @@ router bgp 65500
 !["L02 mac addresses"](./img/iBGP/mac_addr_L02.png)
 
 </details>
+
+### Обмен маршрутной информации NLRI
+
+<details>
+
+<summary>EVPN NLRI Route Type 2</summary>
+
+!["EVPN NLRI Route Type 2"](./img/iBGP/evpn_nlri_t2.png)
+
+</details>
+
+<details>
+
+<summary>EVPN NLRI Route Type 3</summary>
+
+!["EVPN NLRI Route Type 3"](./img/iBGP/evpn_nlri_t3.png)
+
+</details>
