@@ -1,0 +1,118 @@
+! device: S01 (vEOS-lab, EOS-4.32.4M)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname S01
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+interface Ethernet1
+   description to_L01
+   mtu 9000
+   no switchport
+   ip address 10.1.1.0/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:1::/127
+!
+interface Ethernet2
+   description to_L02
+   mtu 9000
+   no switchport
+   ip address 10.1.1.2/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:2::/127
+!
+interface Ethernet3
+   description to_L03
+   mtu 9000
+   no switchport
+   ip address 10.1.1.4/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:3::/127
+!
+interface Ethernet4
+   description to_L04
+   mtu 9000
+   no switchport
+   ip address 10.1.1.6/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:4::/127
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 192.168.1.1/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:1:1::/128
+!
+interface Management1
+!
+ip routing
+!
+ipv6 unicast-routing
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+peer-filter pf_LIAF
+   10 match as-range 65001-65010 result accept
+!
+router bgp 65500
+   router-id 192.168.1.1
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   bgp listen range 192.168.0.0/24 peer-group pg_EVPN peer-filter pf_LIAF
+   bgp listen range 10.1.0.0/16 peer-group pg_LIAF peer-filter pf_LIAF
+   bgp listen range fdff:1:1::/48 peer-group pg_LIAF_IPv6 peer-filter pf_LIAF
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN next-hop-unchanged
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN description OVERLAY
+   neighbor pg_EVPN ebgp-multihop 4
+   neighbor pg_EVPN send-community extended
+   neighbor pg_LIAF peer group
+   neighbor pg_LIAF bfd
+   neighbor pg_LIAF bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_LIAF_IPv6 peer group
+   neighbor pg_LIAF_IPv6 bfd
+   neighbor pg_LIAF_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   address-family evpn
+      neighbor pg_EVPN activate
+   !
+   address-family ipv4
+      neighbor pg_LIAF activate
+   !
+   address-family ipv6
+      neighbor pg_LIAF_IPv6 activate
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end
