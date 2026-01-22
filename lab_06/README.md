@@ -676,3 +676,31 @@ router bgp 65004
 !["Пинги от Linux_5"](./img/ping_linux_1_vlan200.png)
 
 </details>
+
+<details>
+
+<summary>Распределение <b>echo request</b> и <b>echo reply</b> по разным линкам</summary>
+
+!["Пинги от Linux_5"](./img/ping_L01_inc3.png)
+
+</details>
+
+---
+
+## Обмен маршрутной информации NLRI
+
+<details>
+
+<summary>EVPN NLRI Route Type 2</summary>
+
+!["EVPN NLRI Route Type 2"](./img/L01_nlri_t2.png)
+
+</details>
+
+<details>
+
+<summary>EVPN NLRI Route Type 3</summary>
+
+!["EVPN NLRI Route Type 3"](./img/L01_nlri_t3.png)
+
+</details>
