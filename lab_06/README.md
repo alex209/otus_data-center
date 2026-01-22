@@ -579,19 +579,19 @@ router bgp 65004
 
 <summary>Маршруты MAC/IP</summary>
 
-L01
+### L01
 
 !["Маршруты MAC/IP"](./img/L01_evpn_t2.png)
 
-L02
+### L02
 
 !["Маршруты MAC/IP"](./img/L02_evpn_t2.png)
 
-L03
+### L03
 
 !["Маршруты MAC/IP"](./img/L03_evpn_t2.png)
 
-L04
+### L04
 
 !["Маршруты MAC/IP"](./img/L04_evpn_t2.png)
 
@@ -601,28 +601,78 @@ L04
 
 <summary>Информация об IP-prefix</summary>
 
-L01
+### L01
 
 !["Маршруты MAC/IP"](./img/L01_evpn_t3_ipv4.png)
 
 !["Маршруты MAC/IP"](./img/L01_evpn_t3_ipv6.png)
 
-L02
+### L02
 
 !["Маршруты MAC/IP"](./img/L02_evpn_t3_ipv4.png)
 
 !["Маршруты MAC/IP"](./img/L02_evpn_t3_ipv6.png)
 
-L03
+### L03
 
 !["Маршруты MAC/IP"](./img/L03_evpn_t3_ipv4.png)
 
 !["Маршруты MAC/IP"](./img/L03_evpn_t3_ipv6.png)
 
-L04
+### L04
 
 !["Маршруты MAC/IP"](./img/L04_evpn_t3_ipv4.png)
 
 !["Маршруты MAC/IP"](./img/L04_evpn_t3_ipv6.png)
+
+</details>
+
+<details>
+
+<summary>Маршрутная информация в VRF</summary>
+
+### L01
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv4.png)
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv6.png)
+
+### L02
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv4.png)
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv6.png)
+
+### L03
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv4.png)
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv6.png)
+
+### L04
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv4.png)
+
+!["Маршруты MAC/IP"](./img/L01_ip_ro_ipv6.png)
+
+</details>
+
+---
+
+## Проверка связности между клиентами
+
+<details>
+
+<summary>Пинги во VLAN 100 от Linux_1 к другим клиентам</summary>
+
+!["Пинги от Linux_1"](./img/ping_linux_1_vlan100.png)
+
+</details>
+
+<details>
+
+<summary>Пинги во VLAN 200 от Linux_1 к другим клиентам</summary>
+
+!["Пинги от Linux_5"](./img/ping_linux_1_vlan200.png)
 
 </details>
