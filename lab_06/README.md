@@ -699,8 +699,8 @@ router bgp 65004
 
 <details>
 
-<summary>EVPN NLRI Route Type 3</summary>
+<summary>EVPN NLRI Route Type 5</summary>
 
-!["EVPN NLRI Route Type 3"](./img/L01_nlri_t3.png)
+!["EVPN NLRI Route Type 5"](./img/L01_nlri_t5.png)
 
 </details>
