@@ -132,9 +132,10 @@
 
 ---
 
+## Настройка оборудования 
+
 В академических целях настроим гибридную конфигуцию с использованием **MLAG** на Leaf L01&L02 и **EVPN multihoming** на Leaf L03&L04
 
-## Настройка оборудования 
 
 <details>
 
@@ -182,6 +183,7 @@ mlag configuration
 !
 
 ```
+Полная конфигурация [Leaf L01](./conf/L01.eos)
 
 ### L02
 
@@ -225,6 +227,7 @@ mlag configuration
 !
 
 ```
+Полная конфигурация [Leaf L02](./conf/L02.eos)
 
 </details>
 
@@ -237,13 +240,52 @@ mlag configuration
 ### L03
 
 ```
-
+!
+interface Port-Channel7
+   description to_Server4
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:0007
+      route-target import 00:00:00:00:00:07
+   lacp system-id 02aa.aaaa.0007
+!
+interface Port-Channel8
+   description to_Server3
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:0008
+      route-target import 00:00:00:00:00:08
+   lacp system-id 02aa.aaaa.0008
+!
 ```
+Полная конфигурация [Leaf L03](./conf/L03.eos)
 
 ### L04
 
 ```
-
+!
+interface Port-Channel7
+   description to_Server4
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:0007
+      route-target import 00:00:00:00:00:07
+   lacp system-id 02aa.aaaa.0007
+!
+interface Port-Channel8
+   description to_Server3
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:0008
+      route-target import 00:00:00:00:00:08
+   lacp system-id 02aa.aaaa.0008
+!
 ```
+
+Полная конфигурация [Leaf L04](./conf/L04.eos)
 
 </details>
