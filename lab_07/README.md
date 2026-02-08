@@ -132,13 +132,13 @@
 
 ---
 
-В академических целях настроим гибридную конфигуцию **MLAG** и **EVPN multihoming**
+В академических целях настроим гибридную конфигуцию с использованием **MLAG** на Leaf L01&L02 и **EVPN multihoming** на Leaf L03&L04
 
 ## Настройка оборудования 
 
 <details>
 
-<summary>>Настройка MLAG пары на LEAF L01 и L02</summary>
+<summary>Настройка MLAG пары на LEAF L01&L02</summary>
 
 ### L01
 
@@ -223,6 +223,26 @@ mlag configuration
    peer-link Port-Channel34
    dual-primary detection delay 1 action errdisable all-interfaces
 !
+
+```
+
+</details>
+
+---
+
+<details>
+
+<summary>Настройка EVPN multihoming пары на LEAF L01&L02</summary>
+
+### L03
+
+```
+
+```
+
+### L04
+
+```
 
 ```
 
