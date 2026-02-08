@@ -289,3 +289,31 @@ interface Port-Channel8
 Полная конфигурация [Leaf L04](./conf/L04.eos)
 
 </details>
+
+---
+
+Spine S01&S02 остаются без изменений
+
+Полная конфигурация [Spine S01](./conf/S01.eos)
+
+Полная конфигурация [Spine S02](./conf/S02.eos)
+
+## Проверка работоспособности сети
+
+<details>
+
+<summary>Пинги от VPC1 другим клиентам</summary>
+
+!["Пинги от VPC1"](./img/ping_VPC1.png)
+
+!["Пинги IPv6 от VPC1"](./img/ping_VPC1_ipv6.png)
+
+</details>
+
+---
+
+<video controls width="250">
+  <source src="./img/check_L01.webm" type="video/webm">
+</video>
+
+![](./img/check_L01.webm)
