@@ -312,11 +312,22 @@ Spine S01&S02 остаются без изменений
 
 ---
 
+## Проверка отказоустойчивости 
 
 ---
+
+Проверка отказоустойчивости **MLAG** от VPC1
+ - пингуем с VPC1 через Server1 
+ - поочередно отключаем линки Server1-L01 и Server1-L02 
+
 [Chech VPC1](https://github.com/user-attachments/assets/04a37453-6d3f-46ba-87c5-aea647a758a1)
 
+
 ---
+
+Проверка отказоустойчивости **EVPN multihoming** от VPC1
+
+Проверка отказоустойчивости 
 
 [Check VPC5](https://github.com/user-attachments/assets/4fe6b44d-2fd4-4770-b4ac-820d0399e7eb)
 
