@@ -142,8 +142,7 @@
 
 ## Настройка оборудования 
 
-В академических целях настроим гибридную конфигуцию с использованием **MLAG** на Leaf L01&L02 и **EVPN multihoming** на Leaf L03&L04
-
+> В академических целях настроим гибридную конфигуцию с использованием **MLAG** на Leaf L01&L02 и **EVPN multihoming** на Leaf L03&L04
 
 <details>
 
@@ -251,7 +250,7 @@ mlag configuration
 
 <details>
 
-<summary>Настройка EVPN multihoming пары на LEAF L01&L02</summary>
+<summary>Настройка EVPN multihoming на LEAF L01&L02</summary>
 
 ### L03
 
@@ -308,7 +307,7 @@ interface Port-Channel8
 
 ---
 
-Spine S01&S02 остаются без изменений
+Spine S01&S02 остаются без изменений как и в предыдущих работах.
 
 Полная конфигурация [Spine S01](./conf/S01.eos)
 
@@ -339,6 +338,48 @@ Spine S01&S02 остаются без изменений
 ### L02 
 
 !["L02 MLAG"](./img/L02_mlag.png)
+
+</details>
+
+--- 
+
+<details>
+
+<summary>Информация EVPN</summary>
+
+### EVPN route-type count 
+
+!["L01"](./img/L01_evpn_rt_count.png)
+
+### EVPN route-type auto-discovery
+
+!["L01"](./img/L01_evpn_rt1.png)
+
+### EVPN route-type mac-ip vni 10100
+
+!["L01"](./img/L01_evpn_rt2_vni_10100.png)
+
+### EVPN route-type mac-ip vni 10200
+
+!["L01"](./img/L01_evpn_rt2_vni_10200.png)
+
+### EVPN route-type imet
+
+!["L01"](./img/L01_evpn_rt3.png)
+
+### EVPN route-type ethernet-segment
+
+!["L01"](./img/L01_evpn_rt4.png)
+
+### EVPN route-type ip-prefix ipv4
+
+!["L01"](./img/L01_evpn_rt5_ipv4.png)
+
+### EVPN route-type ip-prefix ipv6
+
+!["L01"](./img/L01_evpn_rt5_ipv6.png)
+
+
 
 </details>
 
