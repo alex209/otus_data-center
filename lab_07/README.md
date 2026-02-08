@@ -310,10 +310,3 @@ Spine S01&S02 остаются без изменений
 
 </details>
 
----
-[check_L01.webm](https://github.com/user-attachments/assets/04a37453-6d3f-46ba-87c5-aea647a758a1)
-
----
-
-[check_L05.webm](https://github.com/user-attachments/assets/4fe6b44d-2fd4-4770-b4ac-820d0399e7eb)
-
