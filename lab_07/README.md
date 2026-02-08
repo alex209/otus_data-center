@@ -311,8 +311,5 @@ Spine S01&S02 остаются без изменений
 </details>
 
 ---
-
-<video controls width="250" autoplay="true">
-  <source src="./img/check_L01.webm" type="video/webm">
-</video>
+[check_L01.webm](https://github.com/user-attachments/assets/04a37453-6d3f-46ba-87c5-aea647a758a1)
 
