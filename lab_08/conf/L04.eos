@@ -1,0 +1,233 @@
+! device: L04 (vEOS-lab, EOS-4.32.4M)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname L04
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 20
+   name Client_20
+!
+vlan 100
+   name Client_100
+!
+vlan 200
+   name Client_200
+!
+vrf instance VRF1
+   description RED_VRF
+!
+vrf instance VRF2
+   description BLUE_VRF
+!
+interface Port-Channel6
+   description to_R1
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:0006
+      route-target import 00:00:00:00:00:06
+   lacp system-id 02aa.aaaa.0006
+!
+interface Port-Channel7
+   description to_Server4
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:0007
+      route-target import 00:00:00:00:00:07
+   lacp system-id 02aa.aaaa.0007
+!
+interface Port-Channel8
+   description to_Server3
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:0008
+      route-target import 00:00:00:00:00:08
+   lacp system-id 02aa.aaaa.0008
+!
+interface Ethernet1
+   description to_S01
+   mtu 9000
+   no switchport
+   ip address 10.1.1.7/31
+   ipv6 enable
+   ipv6 address fdff:1:1:1:4::1/127
+!
+interface Ethernet2
+   description to_S02
+   mtu 9000
+   no switchport
+   ip address 10.1.2.7/31
+   ipv6 enable
+   ipv6 address fdff:1:1:2:4::1/127
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+   switchport mode trunk
+   channel-group 6 mode active
+!
+interface Ethernet7
+   switchport mode trunk
+   channel-group 7 mode active
+!
+interface Ethernet8
+   switchport mode trunk
+   channel-group 8 mode active
+!
+interface Loopback0
+   ip address 192.168.0.4/32
+   ipv6 enable
+   ipv6 address fdfd:1:1:0:4::/128
+!
+interface Management1
+!
+interface Vlan20
+   vrf VRF2
+   ip address 172.16.20.4/24
+   ipv6 enable
+   ipv6 address fd:1:20::4/64
+   ip virtual-router address 172.16.20.254
+   ipv6 virtual-router address fd:1:20::ff
+!
+interface Vlan100
+   vrf VRF1
+   ip address 172.16.100.4/24
+   ipv6 enable
+   ipv6 address fd:1:100::4/64
+   ip virtual-router address 172.16.100.254
+   ipv6 virtual-router address fd:1:100::ff
+!
+interface Vlan200
+   vrf VRF1
+   ip address 172.16.200.4/24
+   ipv6 enable
+   ipv6 address fd:1:200::4/64
+   ip virtual-router address 172.16.200.254
+   ipv6 virtual-router address fd:1:200::ff
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 20 vni 10020
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+   vxlan vrf VRF1 vni 11100
+   vxlan vrf VRF2 vni 12100
+!
+ip virtual-router mac-address 02:00:00:00:00:00
+!
+ip routing
+ip routing vrf VRF1
+ip routing vrf VRF2
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf VRF1
+ipv6 unicast-routing vrf VRF2
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+router bgp 65004
+   router-id 192.168.0.4
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   maximum-paths 2 ecmp 2
+   neighbor pg_EVPN peer group
+   neighbor pg_EVPN remote-as 65500
+   neighbor pg_EVPN update-source Loopback0
+   neighbor pg_EVPN description OVERLAY
+   neighbor pg_EVPN ebgp-multihop 4
+   neighbor pg_EVPN send-community extended
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65500
+   neighbor pg_SPINE bfd
+   neighbor pg_SPINE bfd interval 100 min-rx 100 multiplier 3
+   neighbor pg_SPINE_IPv6 peer group
+   neighbor pg_SPINE_IPv6 remote-as 65500
+   neighbor pg_SPINE_IPv6 bfd
+   neighbor pg_SPINE_IPv6 bfd interval 100 min-rx 100 multiplier 3
+   neighbor 10.1.1.6 peer group pg_SPINE
+   neighbor 10.1.2.6 peer group pg_SPINE
+   neighbor 192.168.1.1 peer group pg_EVPN
+   neighbor 192.168.1.2 peer group pg_EVPN
+   neighbor fdff:1:1:1:4:: peer group pg_SPINE_IPv6
+   neighbor fdff:1:1:2:4:: peer group pg_SPINE_IPv6
+   redistribute connected route-map rm_REDISTRIBUTE
+   !
+   vlan 20
+      rd auto
+      route-target both 65500:10020
+      redistribute learned
+   !
+   vlan 100
+      rd auto
+      route-target both 65500:10100
+      redistribute learned
+   !
+   vlan 200
+      rd auto
+      route-target both 65500:10200
+      redistribute learned
+   !
+   address-family evpn
+      neighbor pg_EVPN activate
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+   !
+   address-family ipv6
+      neighbor pg_SPINE_IPv6 activate
+   !
+   vrf VRF1
+      rd 65004:11100
+      route-target import evpn 65500:11100
+      route-target export evpn 65500:11100
+      !
+      address-family ipv4
+         redistribute connected
+      !
+      address-family ipv6
+         redistribute connected
+   !
+   vrf VRF2
+      rd 65004:12100
+      route-target import evpn 65500:12100
+      route-target export evpn 65500:12100
+      !
+      address-family ipv4
+         redistribute connected
+      !
+      address-family ipv6
+         redistribute connected
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end

@@ -1,0 +1,93 @@
+! device: R1 (vEOS-lab, EOS-4.32.4M)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname R1
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+interface Ethernet1
+!
+interface Ethernet2
+!
+interface Ethernet3
+   no switchport
+!
+interface Ethernet3.901
+   description RED_VRF1
+   encapsulation dot1q vlan 901
+   ip address 10.255.255.0/31
+   ipv6 enable
+   ipv6 address fdff:10:255:255::/127
+!
+interface Ethernet3.902
+   description BLUE_VRF2
+   encapsulation dot1q vlan 902
+   ip address 10.255.255.2/31
+   ipv6 enable
+   ipv6 address fdff:10:255:255::2/127
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   ip address 8.8.8.8/32
+   ipv6 enable
+   ipv6 address fd::8:8:8:8/128
+!
+interface Management1
+!
+ip routing
+!
+ipv6 unicast-routing
+!
+ip route 0.0.0.0/0 Null0
+!
+router bgp 64999
+   no bgp default ipv4-unicast
+   neighbor 10.255.255.1 remote-as 65005
+   neighbor 10.255.255.3 remote-as 65005
+   neighbor fdff:10:255:255::1 remote-as 65005
+   neighbor fdff:10:255:255::3 remote-as 65005
+   !
+   address-family ipv4
+      neighbor 10.255.255.1 activate
+      neighbor 10.255.255.1 default-originate always
+      neighbor 10.255.255.3 activate
+      neighbor 10.255.255.3 default-originate always
+      network 8.8.8.8/32
+   !
+   address-family ipv6
+      neighbor fdff:10:255:255::1 activate
+      neighbor fdff:10:255:255::1 default-originate always
+      neighbor fdff:10:255:255::3 activate
+      neighbor fdff:10:255:255::3 default-originate always
+      network fd::8:8:8:8/128
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end
