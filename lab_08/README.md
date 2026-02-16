@@ -163,7 +163,7 @@
 
 За основу взята лабораторная работа [Lab-07](../lab_07/)
 
-В топологию добавлен дополнительный маршрутизатор **R1** подключенный в **Leaf L05** который выполняет роль *Border Leaf*.
+В топологию добавлен дополнительный маршрутизатор **R1** подключенный к **Leaf L05** который выполняет роль *Border Leaf*.
 
 На **Leaf L01-L04** добавляем необходимый *VRF* и *VLAN*.
 
@@ -339,6 +339,55 @@ router bgp 65003
 ### L04
 
 ```
+!
+vlan 20
+   name Client_20
+!
+vrf instance VRF1
+   description RED_VRF
+!
+vrf instance VRF2
+   description BLUE_VRF
+!
+interface Vlan20
+   vrf VRF2
+   ip address 172.16.20.4/24
+   ipv6 enable
+   ipv6 address fd:1:20::4/64
+   ip virtual-router address 172.16.20.254
+   ipv6 virtual-router address fd:1:20::ff
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 20 vni 10020
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+   vxlan vrf VRF1 vni 11100
+   vxlan vrf VRF2 vni 12100
+!
+ip routing vrf VRF2
+!
+ipv6 unicast-routing vrf VRF2
+!
+router bgp 65004
+   !
+   vlan 20
+      rd auto
+      route-target both 65500:10020
+      redistribute learned
+   !
+   vrf VRF2
+      rd 65004:12100
+      route-target import evpn 65500:12100
+      route-target export evpn 65500:12100
+      !
+      address-family ipv4
+         redistribute connected
+      !
+      address-family ipv6
+         redistribute connected
+!
 
 ```
 
