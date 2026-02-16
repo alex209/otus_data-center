@@ -17,6 +17,8 @@
 
 ![Топология сети](img/lab_08.png)
 
+---
+
 ### Схема адресов IPv4
 
 > **Примечание:** В текущей работе изменена адресация на линках **Spine-Leaf** с сетевой маски /30 на маску /31.
@@ -133,6 +135,8 @@
 |        | Eth3.902  |      | `10.255.255.2/31`   | `fdff:10:255:255::2/127` |
 
 #### Итоговая таблица адресов клиентов
+
+---
 
 ##### VRF1
 
@@ -393,7 +397,74 @@ router bgp 65004
 
 Полная конфигурация [Leaf L04](./conf/L04.eos)
 
-<details>
+</details>
 
+---
 
 Основная настройка будет производится на маршрутизаторе **R1** и **BorderLeaf L05**. 
+
+<details>
+
+<summary>Настройка R1 и LEAF L05</summary>
+
+### R1
+
+```
+hostname R1
+!
+interface Ethernet3
+   no switchport
+!
+interface Ethernet3.901
+   description RED_VRF1
+   encapsulation dot1q vlan 901
+   ip address 10.255.255.0/31
+   ipv6 enable
+   ipv6 address fdff:10:255:255::/127
+!
+interface Ethernet3.902
+   description BLUE_VRF2
+   encapsulation dot1q vlan 902
+   ip address 10.255.255.2/31
+   ipv6 enable
+   ipv6 address fdff:10:255:255::2/127
+!
+interface Loopback0
+   ip address 8.8.8.8/32
+   ipv6 enable
+   ipv6 address fd::8:8:8:8/128
+!
+ip routing
+!
+ipv6 unicast-routing
+!
+ip route 0.0.0.0/0 Null0
+!
+router bgp 64999
+   no bgp default ipv4-unicast
+   neighbor 10.255.255.1 remote-as 65005
+   neighbor 10.255.255.3 remote-as 65005
+   neighbor fdff:10:255:255::1 remote-as 65005
+   neighbor fdff:10:255:255::3 remote-as 65005
+   !
+   address-family ipv4
+      neighbor 10.255.255.1 activate
+      neighbor 10.255.255.1 default-originate always
+      neighbor 10.255.255.3 activate
+      neighbor 10.255.255.3 default-originate always
+      network 8.8.8.8/32
+   !
+   address-family ipv6
+      neighbor fdff:10:255:255::1 activate
+      neighbor fdff:10:255:255::1 default-originate always
+      neighbor fdff:10:255:255::3 activate
+      neighbor fdff:10:255:255::3 default-originate always
+      network fd::8:8:8:8/128
+!
+end
+
+```
+
+Полная конфигурация [Leaf R1](./conf/R1.eos)
+
+</details>
