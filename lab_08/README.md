@@ -632,6 +632,40 @@ router bgp 65005
 
 <details>
 
+<summary>Анализ ICMP пакетов</summary>
+
+### ICMP request 
+
+!["ICMP"](./img/ICMP_request.png)
+
+### ICMP reply
+
+!["ICMP"](./img/ICMP_reply.png)
+
+По скриншотам видно что эхо запросы идут во **VLAN 902** (VRF2) а эхо ответы идут во **VLAN 901** (VRF1)
+
+</details>
+
+---
+
+<details>
+
+<summary>Анализ BGP NLRI пакетов</summary>
+
+### ICMP request 
+
+!["ICMP"](./img/ws_L05_rt5.png)
+
+### ICMP reply
+
+!["ICMP"](./img/ws_L05_rt5_2.png)
+
+</details>
+
+---
+
+<details>
+
 <summary>Пинги IPv4</summary>
 
 ### VPC1 vlan100 VRF1
@@ -667,25 +701,6 @@ router bgp 65005
 ### VPC21 vlan20 VRF2
 
 !["Пинги от VPC21"](./img/ping_ipv6_VPC21.png)
-
-Присутствует **IPv6** связаность между *VPC* расположенных в разных *VLAN* и разных *VRF*, так-же есть выход во внешние сети.
-
-</details>
-
----
-
-<details>
-
-<summary>Анализ ICMP пакетов</summary>
-
-### VPC1 vlan100 VRF1
-
-!["ICMP"](./img/ping_ipv6_VPC1.png)
-
-### VPC2 vlan200 VRF1
-
-!["Пинги от VPC2"](./img/ping_ipv6_VPC2.png)
-
 
 Присутствует **IPv6** связаность между *VPC* расположенных в разных *VLAN* и разных *VRF*, так-же есть выход во внешние сети.
 
