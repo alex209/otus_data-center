@@ -594,22 +594,37 @@ router bgp 65005
 
 <summary>Информация EVPN</summary>
 
-### EVPN route-type ip-prefix ipv4 vni 11100 (VTF1)
+### EVPN route-type 5 ipv4 vni 11100 (VTF1)
 
 !["L03"](./img/L03_evpn_rt5_vni_11100.png)
 
-### EVPN route-type ip-prefix ipv4 vni 12100 (VTF2)
+### EVPN route-type 5 ipv4 vni 12100 (VTF2)
 
 !["L03"](./img/L03_evpn_rt5_vni_12100.png)
 
-### EVPN route-type ip-prefix ipv6 vni 11100 (VTF1)
+### EVPN route-type 5 ipv6 vni 11100 (VTF1)
 
 !["L03"](./img/L03_evpn_rt5_ipv6_vni_11100.png)
 
-### EVPN route-type ip-prefix ipv6 vni 12100 (VTF2)
+### EVPN route-type 5 ipv6 vni 12100 (VTF2)
 
 !["L03"](./img/L03_evpn_rt5_ipv6_vni_12100.png)
 
+</details>
+
+---
+
+<details>
+
+<summary>Маршрутная информация</summary>
+
+### L03 ip route VRF1
+
+!["L03"](./img/L03_route_VRF1.png)
+
+### L03 ip route VRF2
+
+!["L03"](./img/L03_route_VRF2.png)
 
 </details>
 
@@ -635,6 +650,8 @@ router bgp 65005
 
 </details>
 
+---
+
 <details>
 
 <summary>Пинги IPv6</summary>
@@ -647,7 +664,7 @@ router bgp 65005
 
 !["Пинги от VPC2"](./img/ping_ipv6_VPC2.png)
 
-### VPC21 vlan29 VRF2
+### VPC21 vlan20 VRF2
 
 !["Пинги от VPC21"](./img/ping_ipv6_VPC21.png)
 
@@ -655,3 +672,21 @@ router bgp 65005
 
 </details>
 
+---
+
+<details>
+
+<summary>Анализ ICMP пакетов</summary>
+
+### VPC1 vlan100 VRF1
+
+!["ICMP"](./img/ping_ipv6_VPC1.png)
+
+### VPC2 vlan200 VRF1
+
+!["Пинги от VPC2"](./img/ping_ipv6_VPC2.png)
+
+
+Присутствует **IPv6** связаность между *VPC* расположенных в разных *VLAN* и разных *VRF*, так-же есть выход во внешние сети.
+
+</details>
