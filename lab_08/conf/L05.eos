@@ -125,6 +125,10 @@ ip routing
 ip routing vrf VRF1
 ip routing vrf VRF2
 !
+ip prefix-list pl_CONN_R1
+   seq 10 deny 10.255.255.0/31
+   seq 20 deny 10.255.255.2/31
+!
 ip prefix-list pl_EVPN_HOST
    seq 10 permit 0.0.0.0/0 ge 32
 !
@@ -136,6 +140,9 @@ route-map rm_EVPN_out deny 10
    match ip address prefix-list pl_EVPN_HOST
 !
 route-map rm_EVPN_out permit 50
+!
+route-map rm_R1_OUT permit 10
+   match ip address prefix-list pl_CONN_R1
 !
 route-map rm_REDISTRIBUTE permit 10
    match interface Loopback0
@@ -205,7 +212,7 @@ router bgp 65005
       address-family ipv4
          neighbor 10.255.255.0 activate
          neighbor 10.255.255.0 route-map rm_EVPN_out out
-         redistribute connected
+         redistribute connected route-map rm_R1_OUT
       !
       address-family ipv6
          neighbor fdff:10:255:255:: activate
@@ -221,7 +228,7 @@ router bgp 65005
       address-family ipv4
          neighbor 10.255.255.2 activate
          neighbor 10.255.255.2 route-map rm_EVPN_out out
-         redistribute connected
+         redistribute connected route-map rm_R1_OUT
       !
       address-family ipv6
          neighbor fdff:10:255:255::2 activate
