@@ -590,7 +590,6 @@ router bgp 65005
 
 ## Проверка работоспособности сети
 
-
 <details>
 
 <summary>Пинги IPv4</summary>
@@ -607,5 +606,26 @@ router bgp 65005
 
 !["Пинги от VPC21"](./img/ping_VPC21.png)
 
+> Присутствует **IP** связаность между *VPC* расположенных в разных *VLAN* и разных *VRF* так-же есть выход во внешние сети.
+
+</details>
+
+<details>
+
+<summary>Пинги IPv6</summary>
+
+### VPC1 vlan100 VRF1
+
+!["Пинги от VPC1"](./img/ping_ipv6_VPC1.png)
+
+### VPC2 vlan200 VRF1
+
+!["Пинги от VPC2"](./img/ping_ipv6_VPC2.png)
+
+### VPC21 vlan29 VRF2
+
+!["Пинги от VPC21"](./img/ping_ipv6_VPC21.png)
+
+> Присутствует **IP** связаность между *VPC* расположенных в разных *VLAN* и разных *VRF* так-же есть выход во внешние сети.
 
 </details>
