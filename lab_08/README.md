@@ -161,7 +161,190 @@
 
 ## Настройка оборудования 
 
+За основу взята лабораторная работа [Lab-07](../lab_07/)
+
 В топологию добавлен дополнительный маршрутизатор **R1** подключенный в **Leaf L05** который выполняет роль *Border Leaf*.
 
+На **Leaf L01-L04** добавляем необходимый *VRF* и *VLAN*.
 
-Основная настройка будет производится на маршрутизаторе **R1** и **BorderLeaf L05**
+
+<details>
+
+<summary>Настройка LEAF L01-L04</summary>
+
+### L01
+
+```
+!
+vlan 20
+   name Client_20
+!   
+vrf instance VRF1
+   description RED_VRF
+!
+vrf instance VRF2
+   description BLUE_VRF
+!
+interface Vlan20
+   vrf VRF2
+   ip address 172.16.20.1/24
+   ipv6 enable
+   ipv6 address fd:1:20::1/64
+   ip virtual-router address 172.16.20.254
+   ipv6 virtual-router address fd:1:20::ff
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vlan 20 vni 10020
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+   vxlan vrf VRF1 vni 11100
+   vxlan vrf VRF2 vni 12100
+!
+ip routing vrf VRF2
+!
+ipv6 unicast-routing vrf VRF2
+!
+router bgp 65001
+ !
+   vlan 20
+      rd auto
+      route-target both 65500:10020
+      redistribute learned
+   vrf VRF2
+      rd 65001:12100
+      route-target import evpn 65500:12100
+      route-target export evpn 65500:12100
+      !
+      address-family ipv4
+         redistribute connected
+      !
+      address-family ipv6
+         redistribute connected
+!
+```
+Полная конфигурация [Leaf L01](./conf/L01.eos)
+
+### L02
+
+```
+!
+vlan 20
+   name Client_20
+!
+vrf instance VRF1
+   description RED_VRF
+!
+vrf instance VRF2
+   description BLUE_VRF
+!
+interface Vlan20
+   vrf VRF2
+   ip address 172.16.20.2/24
+   ipv6 enable
+   ipv6 address fd:1:20::2/64
+   ip virtual-router address 172.16.20.254
+   ipv6 virtual-router address fd:1:20::ff
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan udp-port 4789
+   vxlan vlan 20 vni 10020
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+   vxlan vrf VRF1 vni 11100
+   vxlan vrf VRF2 vni 12100
+!
+ip routing vrf VRF2
+!
+ipv6 unicast-routing vrf VRF2
+!
+router bgp 65001
+ !
+   vlan 20
+      rd auto
+      route-target both 65500:10020
+      redistribute learned
+   vrf VRF2
+      rd 65001:12100
+      route-target import evpn 65500:12100
+      route-target export evpn 65500:12100
+      !
+      address-family ipv4
+         redistribute connected
+      !
+      address-family ipv6
+         redistribute connected
+!
+```
+Полная конфигурация [Leaf L02](./conf/L02.eos)
+
+### L03
+
+```
+!
+vlan 20
+   name Client_20
+!
+vrf instance VRF1
+   description RED_VRF
+!
+vrf instance VRF2
+   description BLUE_VRF
+!
+interface Vlan20
+   vrf VRF2
+   ip address 172.16.20.3/24
+   ipv6 enable
+   ipv6 address fd:1:20::3/64
+   ip virtual-router address 172.16.20.254
+   ipv6 virtual-router address fd:1:20::ff
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 20 vni 10020
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+   vxlan vrf VRF1 vni 11100
+   vxlan vrf VRF2 vni 12100
+!
+ip routing vrf VRF2
+!
+ipv6 unicast-routing vrf VRF2
+!
+router bgp 65003
+   !
+   vlan 20
+      rd auto
+      route-target both 65500:10020
+      redistribute learned
+   !
+   vrf VRF2
+      rd 65003:12100
+      route-target import evpn 65500:12100
+      route-target export evpn 65500:12100
+      !
+      address-family ipv4
+         redistribute connected
+      !
+      address-family ipv6
+         redistribute connected
+!
+
+```
+Полная конфигурация [Leaf L03](./conf/L03.eos)
+
+### L04
+
+```
+
+```
+
+Полная конфигурация [Leaf L04](./conf/L04.eos)
+
+<details>
+
+
+Основная настройка будет производится на маршрутизаторе **R1** и **BorderLeaf L05**. 

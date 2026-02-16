@@ -229,8 +229,6 @@ router bgp 65001
    address-family ipv6
       neighbor pg_SPINE_IPv6 activate
    !
-   vrf 1
-   !
    vrf VRF1
       rd 65001:11100
       route-target import evpn 65500:11100
