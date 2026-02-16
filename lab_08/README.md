@@ -626,6 +626,14 @@ router bgp 65005
 
 !["L03"](./img/L03_route_VRF2.png)
 
+### R1 ip route 
+
+!["R1"](./img/route_R1.png)
+
+### R1 ipv6 route 
+
+!["R1"](./img/route_ipv6_R1.png)
+
 </details>
 
 ---
