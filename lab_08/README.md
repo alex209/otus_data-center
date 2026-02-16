@@ -592,6 +592,31 @@ router bgp 65005
 
 <details>
 
+<summary>Информация EVPN</summary>
+
+### EVPN route-type ip-prefix ipv4 vni 11100 (VTF1)
+
+!["L03"](./img/L03_evpn_rt5_vni_11100.png)
+
+### EVPN route-type ip-prefix ipv4 vni 12100 (VTF2)
+
+!["L03"](./img/L03_evpn_rt5_vni_12100.png)
+
+### EVPN route-type ip-prefix ipv6 vni 11100 (VTF1)
+
+!["L03"](./img/L03_evpn_rt5_ipv6_vni_11100.png)
+
+### EVPN route-type ip-prefix ipv6 vni 12100 (VTF2)
+
+!["L03"](./img/L03_evpn_rt5_ipv6_vni_12100.png)
+
+
+</details>
+
+---
+
+<details>
+
 <summary>Пинги IPv4</summary>
 
 ### VPC1 vlan100 VRF1
