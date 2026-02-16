@@ -467,4 +467,109 @@ end
 
 Полная конфигурация [Leaf R1](./conf/R1.eos)
 
+### L05
+
+```
+!
+vlan 20
+   name Client_20
+!
+vrf instance VRF1
+   description RED_VRF
+!
+vrf instance VRF2
+   description BLUE_VRF
+!
+interface Ethernet3
+   no switchport
+!
+interface Ethernet3.901
+   description to_R1
+   encapsulation dot1q vlan 901
+   vrf VRF1
+   ip address 10.255.255.1/31
+   ipv6 enable
+   ipv6 address fdff:10:255:255::1/127
+!
+interface Ethernet3.902
+   encapsulation dot1q vlan 902
+   vrf VRF2
+   ip address 10.255.255.3/31
+   ipv6 enable
+   ipv6 address fdff:10:255:255::3/127
+!
+interface Vlan20
+   vrf VRF2
+   ip address 172.16.20.5/24
+   ipv6 enable
+   ipv6 address fd:1:20::5/64
+   ip virtual-router address 172.16.20.254
+   ipv6 virtual-router address fd:1:20::ff
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 20 vni 10020
+   vxlan vlan 100 vni 10100
+   vxlan vlan 200 vni 10200
+   vxlan vrf VRF1 vni 11100
+   vxlan vrf VRF2 vni 12100
+!
+ip routing vrf VRF2
+!
+ip prefix-list pl_EVPN_HOST
+   seq 10 permit 0.0.0.0/0 ge 32
+!
+ipv6 unicast-routing vrf VRF2
+!
+route-map rm_EVPN_out deny 10
+   match ip address prefix-list pl_EVPN_HOST
+!
+route-map rm_EVPN_out permit 50
+!
+router bgp 65005
+   !
+   vlan 20
+      rd auto
+      route-target both 65500:10020
+      redistribute learned
+   !
+   !
+   vrf VRF1
+      rd 65005:11100
+      route-target import evpn 65500:11100
+      route-target export evpn 65500:11100
+      neighbor 10.255.255.0 remote-as 64999
+      neighbor 10.255.255.0 update-source Ethernet3.901
+      neighbor fdff:10:255:255:: remote-as 64999
+      !
+      address-family ipv4
+         neighbor 10.255.255.0 activate
+         neighbor 10.255.255.0 route-map rm_EVPN_out out
+         redistribute connected
+      !
+      address-family ipv6
+         neighbor fdff:10:255:255:: activate
+         redistribute connected
+   !
+   vrf VRF2
+      rd 65005:12100
+      route-target import evpn 65500:12100
+      route-target export evpn 65500:12100
+      neighbor 10.255.255.2 remote-as 64999
+      neighbor fdff:10:255:255::2 remote-as 64999
+      !
+      address-family ipv4
+         neighbor 10.255.255.2 activate
+         neighbor 10.255.255.2 route-map rm_EVPN_out out
+         redistribute connected
+      !
+      address-family ipv6
+         neighbor fdff:10:255:255::2 activate
+         redistribute connected
+!
+
+
+```
+
 </details>
