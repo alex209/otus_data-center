@@ -577,3 +577,35 @@ router bgp 65005
 Полная конфигурация [Leaf L05](./conf/L05.eos)
 
 </details>
+
+---
+
+**Spine S01&S02** остаются без изменений как и в предыдущих работах.
+
+Полная конфигурация [Spine S01](./conf/S01.eos)
+
+Полная конфигурация [Spine S02](./conf/S02.eos)
+
+---
+
+## Проверка работоспособности сети
+
+
+<details>
+
+<summary>Пинги IPv4</summary>
+
+### VPC1 vlan100 VRF1
+
+!["Пинги от VPC1"](./img/ping_VPC1.png)
+
+### VPC2 vlan200 VRF1
+
+!["Пинги от VPC2"](./img/ping_VPC2.png)
+
+### VPC21 vlan29 VRF2
+
+!["Пинги от VPC21"](./img/ping_VPC21.png)
+
+
+</details>
