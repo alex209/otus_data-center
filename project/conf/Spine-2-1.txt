@@ -1,0 +1,104 @@
+! device: Spine-2-1 (vEOS-lab, EOS-4.33.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname Spine-2-1
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+interface Ethernet1
+   description -=to_Leaf2_=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet2
+   description -=to_Leaf2_=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet3
+   description -=to_Leaf2_=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet4
+   description -=Leaf=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+   description -=BrdLeaf=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet8
+   description -=BrdLeaf=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Loopback0
+   description for_OVERLAY
+   ip address 10.2.1.1/32
+!
+interface Management1
+!
+ip routing ipv6 interfaces 
+!
+ipv6 unicast-routing
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+router bgp 65502
+   router-id 10.2.1.1
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor pg_LIAF peer group
+   neighbor pg_LIAF remote-as 65502
+   neighbor pg_LIAF route-reflector-client
+   neighbor pg_LIAF send-community extended
+   redistribute connected route-map rm_REDISTRIBUTE
+   neighbor interface Et1-4,7-8 peer-group pg_LIAF
+   !
+   address-family evpn
+      neighbor pg_LIAF activate
+      neighbor pg_LIAF next-hop-unchanged
+   !
+   address-family ipv4
+      neighbor pg_LIAF activate
+      neighbor pg_LIAF next-hop address-family ipv6 originate
+      neighbor pg_LIAF next-hop-self
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end

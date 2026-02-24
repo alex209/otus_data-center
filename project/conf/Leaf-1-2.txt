@@ -1,0 +1,184 @@
+! device: Leaf-1-2 (vEOS-lab, EOS-4.33.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname Leaf-1-2
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 10
+   name Client_10
+!
+vlan 20
+   name Client_20
+!
+vlan 30
+   name Client_30
+!
+vrf instance BLUE
+!
+vrf instance RED
+!
+interface Port-Channel7
+   description to_Server1
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0001:0012:0007
+      route-target import 00:00:00:01:12:07
+   lacp system-id 0201.0012.0007
+!
+interface Port-Channel8
+   description to_Server2
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0001:0012:0008
+      route-target import 00:00:00:01:12:08
+   lacp system-id 0201.0012.0008
+!
+interface Ethernet1
+   description -=Spine1=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet2
+   description -=Spine2=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+   switchport mode trunk
+   channel-group 7 mode active
+!
+interface Ethernet8
+   switchport mode trunk
+   channel-group 8 mode active
+!
+interface Loopback0
+   description for_OVERLAY
+   ip address 10.1.0.2/32
+!
+interface Management1
+!
+interface Vlan10
+   description Client_10
+   vrf RED
+   ip address 172.16.10.12/24
+   ip virtual-router address 172.16.10.254
+!
+interface Vlan20
+   description Client_20
+   vrf RED
+   ip address 172.16.20.12/24
+   ip virtual-router address 172.16.20.254
+!
+interface Vlan30
+   description Client_30
+   vrf BLUE
+   ip address 172.16.30.12/24
+   ip virtual-router address 172.16.30.254
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
+   vxlan vlan 30 vni 10030
+   vxlan vrf BLUE vni 200102
+   vxlan vrf RED vni 200101
+!
+ip virtual-router mac-address 02:00:00:00:00:00
+!
+ip routing ipv6 interfaces 
+ip routing vrf BLUE
+ip routing vrf RED
+!
+ipv6 unicast-routing
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+router bgp 65501
+   router-id 10.1.0.2
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65501
+   neighbor pg_SPINE send-community extended
+   redistribute connected route-map rm_REDISTRIBUTE
+   neighbor interface Et1-2 peer-group pg_SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 65501:10010
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 65501:10020
+      redistribute learned
+   !
+   vlan 30
+      rd auto
+      route-target both 65501:10030
+      redistribute learned
+   !
+   address-family evpn
+      neighbor pg_SPINE activate
+      neighbor pg_SPINE next-hop-unchanged
+   !
+   address-family ipv4
+      neighbor pg_SPINE activate
+      neighbor pg_SPINE next-hop address-family ipv6 originate
+      neighbor pg_SPINE next-hop-self
+   !
+   vrf BLUE
+      rd 10.1.0.2:102
+      route-target import evpn 65501:200102
+      route-target export evpn 65501:200102
+      !
+      address-family ipv4
+         redistribute connected
+   !
+   vrf RED
+      rd 10.1.0.2:101
+      route-target import evpn 65501:200101
+      route-target export evpn 65501:200101
+      !
+      address-family ipv4
+         redistribute connected
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end
