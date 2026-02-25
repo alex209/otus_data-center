@@ -12,7 +12,7 @@ service routing protocols model multi-agent
 !
 hostname BrdLeaf-1-1
 !
-spanning-tree mode mstp
+spanning-tree mode none
 no spanning-tree vlan-id 1-4094
 !
 system l1

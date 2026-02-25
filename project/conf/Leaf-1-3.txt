@@ -54,12 +54,14 @@ interface Ethernet1
    mtu 9000
    no switchport
    ipv6 enable
+   spanning-tree link-type point-to-point
 !
 interface Ethernet2
    description -=Spine=-
    mtu 9000
    no switchport
    ipv6 enable
+   spanning-tree link-type point-to-point
 !
 interface Ethernet3
 !
