@@ -48,3 +48,30 @@
  - VXLAN туннели строятся от Leaf к Leaf, 
  - источник – Loopback0, 
  - Anycast gateway на SVI.
+  
+![Топология сети](img/topology2.png)
+
+## Реализация (что получилось)
+
+### Underlay:
+
+ - На всех L3-линках (кроме серверных) настроено ipv6 enable, mtu 9000.
+ - BGP-соседства через IPv6 link-local, peer-group, next-hop-self, next-hop-unchanged (для EVPN).
+ - Loopback0 с /32 анонсируются в BGP для обеспечения IP-связности внутри пода.
+
+### Overlay:
+
+ - VXLAN интерфейс с VNI 10010,10020,10030 (L2VNI) и 200101,200102 (L3VNI).
+ - SVI для VLAN 10,20,30 с anycast gateway (IP 172.16.x.254, виртуальный MAC 02:00:00:00:00:00).
+ - BGP EVPN активирован, route-target по схеме AS:VNI, RT перезапись на Border Leaf для межподового обмена.
+  
+### Мультихоминг:
+
+ - Port-Channel7/8 с одинаковым ESI на парных Leaf, LACP system-id.
+ - EVPN Ethernet Segment настроен, route-target import для синхронизации.
+
+### Межподовое взаимодействие: 
+ 
+ - Border Leaf обмениваются EVPN маршрутами через eBGP, route-map перезаписывает RT (65501:10010 → 65502:10010 и обратно).
+ - L3VNI также перезаписываются для VRF RED/BLUE.
+  
