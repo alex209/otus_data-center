@@ -29,4 +29,22 @@
  - Межподовое взаимодействие: Option A (VRF-to-VRF) на Border Leaf с перезаписью Route Target через route-map.
  - Платформа: Arista EOS (vEOS-lab).
   
-  
+
+## Архитектура сети (схема)
+
+### Общая топология:
+
+ - Два пода (Pod1: AS 65501, Pod2: AS 65502).
+ - Каждый под: 2 Spine, 4 Leaf, 2 Border Leaf.
+ - Связь между подами через линки Border Leaf (интерфейсы Ethernet8).
+ - Серверы подключены к Leaf через Port-Channel (ESI-LAG).
+
+### Underlay: 
+ - Все линки между Leaf, Spine и Border Leaf – L3, с включённым IPv6 (link-local)
+ - BGP-сессии устанавливаются через neighbor interface.
+
+### Overlay: 
+ 
+ - VXLAN туннели строятся от Leaf к Leaf, 
+ - источник – Loopback0, 
+ - Anycast gateway на SVI.
