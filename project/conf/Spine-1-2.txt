@@ -13,6 +13,7 @@ service routing protocols model multi-agent
 hostname Spine-1-2
 !
 spanning-tree mode mstp
+no spanning-tree vlan-id 1-4094
 !
 system l1
    unsupported speed action error

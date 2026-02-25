@@ -50,13 +50,13 @@ interface Port-Channel8
    lacp system-id 0202.0034.0008
 !
 interface Ethernet1
-   description -=to_Spine=-
+   description -=Spine=-
    mtu 9000
    no switchport
    ipv6 enable
 !
 interface Ethernet2
-   description -=to_Spine=-
+   description -=Spine=-
    mtu 9000
    no switchport
    ipv6 enable

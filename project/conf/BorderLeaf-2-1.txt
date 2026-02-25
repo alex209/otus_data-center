@@ -13,6 +13,7 @@ service routing protocols model multi-agent
 hostname BrdLeaf-2-1
 !
 spanning-tree mode mstp
+no spanning-tree vlan-id 1-4094
 !
 system l1
    unsupported speed action error
@@ -57,6 +58,8 @@ ip routing ipv6 interfaces
 ip extcommunity-list ecl_POD2_10010 permit rt 65502:10010
 ip extcommunity-list ecl_POD2_10020 permit rt 65502:10020
 ip extcommunity-list ecl_POD2_10030 permit rt 65502:10030
+ip extcommunity-list ecl_POD2_200101 permit rt 65502:200101
+ip extcommunity-list ecl_POD2_200102 permit rt 65502:200102
 !
 ipv6 unicast-routing
 !
@@ -71,6 +74,14 @@ route-map REWRITE_RT_OUT permit 20
 route-map REWRITE_RT_OUT permit 30
    match extcommunity ecl_POD2_10030
    set extcommunity rt 65501:10030
+!
+route-map REWRITE_RT_OUT permit 110
+   match extcommunity ecl_POD2_200101
+   set extcommunity rt 65501:200101
+!
+route-map REWRITE_RT_OUT permit 120
+   match extcommunity ecl_POD2_200102
+   set extcommunity rt 65501:200102
 !
 route-map REWRITE_RT_OUT permit 200
 !
