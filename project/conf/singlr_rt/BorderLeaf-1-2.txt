@@ -1,0 +1,99 @@
+! device: BrdLeaf-1-2 (vEOS-lab, EOS-4.33.1F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+no service interface inactive port-id allocation disabled
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname BrdLeaf-1-2
+!
+spanning-tree mode none
+no spanning-tree vlan-id 1-4094
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+interface Ethernet1
+   description -=Spine=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet2
+   description -=Spine=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+   description -=BrdLeaf=-
+   mtu 9000
+   no switchport
+   ipv6 enable
+!
+interface Loopback0
+   description for_OVERLAY
+   ip address 10.1.0.202/32
+!
+interface Management1
+!
+ip routing ipv6 interfaces 
+!
+ipv6 unicast-routing
+!
+route-map rm_REDISTRIBUTE permit 10
+   match interface Loopback0
+   set origin igp
+!
+route-map rm_REDISTRIBUTE deny 50
+!
+router bgp 65501
+   router-id 10.1.0.202
+   no bgp default ipv4-unicast
+   maximum-paths 4 ecmp 4
+   neighbor pg_BRDLEAF peer group
+   neighbor pg_BRDLEAF remote-as 65502
+   neighbor pg_BRDLEAF send-community extended
+   neighbor pg_SPINE peer group
+   neighbor pg_SPINE remote-as 65501
+   neighbor pg_SPINE send-community extended
+   redistribute connected route-map rm_REDISTRIBUTE
+   neighbor interface Et1-2 peer-group pg_SPINE
+   neighbor interface Et8 peer-group pg_BRDLEAF
+   !
+   address-family evpn
+      neighbor pg_BRDLEAF activate
+      neighbor pg_SPINE activate
+      neighbor pg_SPINE next-hop-unchanged
+   !
+   address-family ipv4
+      neighbor pg_BRDLEAF activate
+      neighbor pg_BRDLEAF next-hop address-family ipv6 originate
+      neighbor pg_SPINE activate
+      neighbor pg_SPINE next-hop address-family ipv6 originate
+      neighbor pg_SPINE next-hop-self
+!
+router multicast
+   ipv4
+      software-forwarding kernel
+   !
+   ipv6
+      software-forwarding kernel
+!
+end
