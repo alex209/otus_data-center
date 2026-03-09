@@ -368,5 +368,12 @@ address-family evpn
 ## Проверка работоспособности
 
 
+Проверка отказоустойчивости **BorderLeaf**
+https://github.com/user-attachments/assets/c7e04bdd-a0d0-442b-8023-cf305de03887
+
+Проверка отказоустойчивости **Мультихоминг**
+https://github.com/user-attachments/assets/74187f27-c2fa-4d1a-95e4-662713eba760
+
+
 ## Что не получилось 
   
