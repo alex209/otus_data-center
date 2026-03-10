@@ -368,6 +368,18 @@ address-family evpn
 ## Проверка работоспособности
 
 
+### BGP соседство Spine-1-1
+![Топология сети](img/S-1-1_bgp_neigbor.png)
+
+### BGP соседство Spine-1-2
+![Топология сети](img/S-1-2_bgp_neigbor.png)
+
+### BGP соседство Spine-2-1
+![Топология сети](img/S-2-1_bgp_neigbor.png)
+
+### BGP соседство Spine-2-2
+![Топология сети](img/S-2-2_bgp_neigbor.png)
+
 Проверка отказоустойчивости **BorderLeaf**
 
 [Chech VPC1](https://github.com/user-attachments/assets/c7e04bdd-a0d0-442b-8023-cf305de03887)
