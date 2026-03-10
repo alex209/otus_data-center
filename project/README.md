@@ -367,33 +367,41 @@ address-family evpn
   
 ## Проверка работоспособности
 
-### BGP соседство Spine-1-1
+### BGP соседство _Spine-1-1_
 ![BGP соседство Spine-1-1](img/S-1-1_bgp_neigbor.png)
 
-### BGP соседство Spine-1-2
+### BGP соседство _Spine-1-2_
 ![BGP соседство Spine-1-2](img/S-1-2_bgp_neigbor.png)
 
-### BGP соседство Spine-2-1
+### BGP соседство _Spine-2-1_
 ![BGP соседство Spine-2-1](img/S-2-1_bgp_neigbor.png)
 
-### BGP соседство Spine-2-2
+### BGP соседство _Spine-2-2_
 ![BGP соседство Spine-2-2](img/S-2-2_bgp_neigbor.png)
 
-### ping в _VFR RED_ от VPC-1
+### ping в _VFR RED_ от _VPC-1_
 ![ping в VFR RED от VPC-1](img/ping_VPC1.png)
 
-### ping в _VFR BLUE_ от VPC-3
+### ping в _VFR BLUE_ от _VPC-3_
 ![ping в VFR BLUE от VPC-3](img/ping_VPC3.png)
 
 
-Проверка отказоустойчивости **BorderLeaf**
+### Проверка отказоустойчивости _BorderLeaf_
 
 [Chech VPC1](https://github.com/user-attachments/assets/c7e04bdd-a0d0-442b-8023-cf305de03887)
 
-Проверка отказоустойчивости **Мультихоминг**
+### Проверка отказоустойчивости _Мультихоминг_
 
 [Chech VPC1](https://github.com/user-attachments/assets/74187f27-c2fa-4d1a-95e4-662713eba760)
 
 
 ## Что не получилось 
   
+### Заставить корректно работать BFD
+
+При включении **BFD** в **UNDERLAY** сети 
+
+
+### Настроить кооректность работы межподового взаимодействия
+
+
